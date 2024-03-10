@@ -628,14 +628,17 @@ open class SubsamplingScaleImageView @JvmOverloads constructor(context: Context,
             val targetScale = if (zoomIn) doubleTapZoomScale else getFullScale()
             AnimationBuilder(sCenter!!, targetScale).start()
         } else {
-            val targetScale = if (zoomIn && scale != 1f) doubleTapZoomScale else getFullScale()
+            var targetScale = if (zoomIn && scale != 1f) doubleTapZoomScale else getFullScale()
             if (scale != 1f) {
                 if (zoomIn) {
                     AnimationBuilder(sCenter!!, targetScale).start()
                 } else {
-                    AnimationBuilder(sCenter!!, 1f).start()
+                    AnimationBuilder(sCenter!!, Math.max(1f, targetScale)).start()
                 }
             } else {
+                if (targetScale == scale) {
+                    targetScale = doubleTapZoomScale
+                }
                 AnimationBuilder(sCenter!!, targetScale).start()
             }
         }
